@@ -21,7 +21,9 @@ const visibleContacts = getVisibleContacts(contacts, normalize)
 
     return <section>
         <ul>
-        <Contact visibleContacts={visibleContacts} />
+        {visibleContacts.map(contact => {
+            return <Contact contact={contact} key={contact.id}/>
+        })}
         </ul>
     </section>
 }

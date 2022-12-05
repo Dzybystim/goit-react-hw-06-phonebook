@@ -1,9 +1,19 @@
-
+import { useDispatch } from "react-redux"
+import { addContact } from "../../redux/contactsSlice"
 
 export default function AppBar({title, titleInputOne, titleInputTwo}) {
+
+    const dispatch = useDispatch();
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        dispatch(addContact(event.target.elements.name.value, event.target.elements.number.value))
+        event.target.reset()
+    }
+
     return <header>
         <h1> {title} </h1>
-        <form>
+        <form onSubmit={handleSubmit}>
         <label> {titleInputOne}
             <input           
             type="text"
