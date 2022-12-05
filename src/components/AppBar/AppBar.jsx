@@ -1,21 +1,37 @@
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { addContact } from "../../redux/contactsSlice"
+import {getContacts} from "../../redux/selectors"
+import PropTypes from 'prop-types';
+
+import {AppBarStyled, AppBarSpanStyled, AppBarStyledInput, AppBarStyledButton} from './AppBar.styled'
 
 export default function AppBar({title, titleInputOne, titleInputTwo}) {
 
     const dispatch = useDispatch();
 
+    const contacts = useSelector(getContacts)
+
+    const check = (nameContact) => {
+     const checkBoolean = contacts.value.find(contact => contact.text === nameContact)
+     return checkBoolean
+    }
+
+
     const handleSubmit = (event) => {
         event.preventDefault();
-        dispatch(addContact(event.target.elements.name.value, event.target.elements.number.value))
+        const checkBoolean = check(event.target.elements.name.value)
+        if(checkBoolean){
+            return alert(`${event.target.elements.name.value} is already in contacts`)
+        } else {
+        dispatch(addContact(event.target.elements.name.value, event.target.elements.number.value))}
         event.target.reset()
     }
 
-    return <header>
+    return <AppBarStyled>
         <h1> {title} </h1>
         <form onSubmit={handleSubmit}>
-        <label> {titleInputOne}
-            <input           
+        <label> <AppBarSpanStyled>{titleInputOne}</AppBarSpanStyled>
+            <AppBarStyledInput           
             type="text"
             name="name"
             pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
@@ -23,15 +39,22 @@ export default function AppBar({title, titleInputOne, titleInputTwo}) {
             For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
             required/>
         </label>
-        <label> {titleInputTwo}
-             <input             
+        <label> <AppBarSpanStyled>{titleInputTwo}</AppBarSpanStyled>
+             <AppBarStyledInput             
             type="tel"
             name="number"
             pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
             title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
             required/>
         </label>
-        <button type="submit">Add Contact</button>
+        <AppBarStyledButton type="submit">Add Contact</AppBarStyledButton>
         </form>
-    </header>
+    </AppBarStyled>
+}
+
+
+AppBar.propTypes = {
+    title: PropTypes.string.isRequired,
+    titleInputOne: PropTypes.string.isRequired,
+    titleInputTwo: PropTypes.string.isRequired,
 }
